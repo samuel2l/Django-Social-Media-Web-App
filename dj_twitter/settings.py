@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     'social',
     'landing',
         'allauth',
+            'crispy_forms',
+    'crispy_bootstrap5',
+
     'allauth.account',
     'allauth.socialaccount',
     'django.contrib.admin',
@@ -69,7 +72,7 @@ ROOT_URLCONF = 'dj_twitter.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,6 +80,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
             ],
         },
     },
@@ -137,3 +141,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
