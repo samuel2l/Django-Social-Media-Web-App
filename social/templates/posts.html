@@ -9,6 +9,7 @@
         <div class="col-md-5 col-sm-12 border-bottom">
             <p><strong>{{ post.author }}</strong> {{ post.date_created }}</p>
             <p>{{ post.content }}</p>
+            <a class="stretched-link" href="{% url 'post-details' post.pk %}"></a>
         </div>
     </div>
     {% endfor %}

@@ -8,6 +8,11 @@ urlpatterns = [
 
     path('<int:pk>/update/',views.UpdatePostView.as_view(),name='update-post'),
     path('<int:pk>/delete/',views.DeletePostView.as_view(),name='delete-post'),
+    path('<int:pk>/',views.post_details,name='post-details'),
+    path('<int:pk>/comment/',views.CreateCommentView.as_view(),name='comment'),
+
+   
+
     path('my-posts/',views.get_user_posts,name='my-posts')
 
 

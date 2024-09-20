@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 
-from .models import Post
+from .models import Post,Comment
 
 # Create your views here.
 class HomeView(ListView):
@@ -51,7 +52,39 @@ class DeletePostView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
             return True
         return False
 
+def post_details(request,pk):
+    post = get_object_or_404(Post, id=pk)
+    comments=Comment.objects.filter(post=pk).order_by('-date_created')
+
+    return render(request,'post_details.html',{'post':post,'comments':comments})
+
+
 def get_user_posts(request):
     user_posts = Post.objects.filter(author=request.user)
     return render(request,'posts.html',{'posts':user_posts})
 
+class CreateCommentView(LoginRequiredMixin, CreateView):
+    model = Comment
+    fields = ['content']
+    template_name = 'create_comment.html'
+    
+    def form_valid(self, form):
+        #use self.kwarges.get to access parameters passed
+
+        post_id = self.kwargs.get('pk')  
+        post = Post.objects.get(id=post_id)  
+
+        form.instance.author = self.request.user
+        form.instance.post = post
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        # Redirect back to the specific post after commenting
+        return reverse('post-details', kwargs={'pk': self.kwargs.get('pk')})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post_id = self.kwargs.get('pk')
+        # Add the post to the context so we can view post while commenting
+        context['post'] = Post.objects.get(id=post_id)  
+        return context

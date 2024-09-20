@@ -1,0 +1,48 @@
+{% extends 'basee.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-3 col-sm-6">
+            <a href="{% url 'posts' %}" class="btn btn-light">Back to Feed</a>
+        </div>
+    </div>
+
+    <!-- Post content -->
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-6 col-sm-12 border-bottom">
+            <p><strong>{{ post.author }}</strong> {{ post.date_created }}</p>
+            <p>{{ post.content }}</p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-6 col-sm-12">
+            <h5>Comments</h5>
+        </div>
+    </div>
+
+
+    {% for comment in comments %}
+    <div class="row justify-content-center mt-2">
+        <div class="col-md-5 col-sm-12 offset-md-1">
+            <div class="media mb-3">
+                <div class="media-body">
+                    <p class="mb-1"><strong>{{ comment.author }}</strong> 
+                        <small class="text-muted">{{ comment.date_created|date:"F d, Y" }} at {{ comment.date_created|time:"H:i" }}</small>
+                    </p>
+                    <p>{{ comment.content }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-5 col-sm-12 offset-md-1">
+            <p class="text-muted">No comments yet. Be the first to comment!</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

@@ -1,0 +1,35 @@
+{% extends "basee.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Post Content Section -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.author.username }}</h5>
+                    <p class="card-text">{{ post.content }}</p>
+                    <p class="text-muted">{{ post.date_created|date:"F d, Y" }} at {{ post.date_created|time:"H:i" }}</p>
+                </div>
+            </div>
+
+            <!-- Comment Form Section -->
+            <div class="card">
+
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <fieldset class="form-group">
+                            <legend class="border-bottom mb-4">Your Comment</legend>
+                            {{ form|crispy }}
+                        </fieldset>
+                        <div class="form-group text-right">
+                            <button class="btn btn-primary" type="submit">Post Comment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
