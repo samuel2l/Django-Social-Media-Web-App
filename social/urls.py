@@ -10,10 +10,10 @@ urlpatterns = [
     path('<int:pk>/delete/',views.DeletePostView.as_view(),name='delete-post'),
     path('<int:pk>/',views.post_details,name='post-details'),
     path('<int:pk>/comment/',views.CreateCommentView.as_view(),name='comment'),
-
-   
-
-    path('my-posts/',views.get_user_posts,name='my-posts')
+    path('my-posts/',views.get_user_posts,name='my-posts'),
+    path('profile/<int:pk>',views.ProfileView.as_view(),name='profile'),
+    path('edit-profile/<int:pk>',views.EditProfileView.as_view(),name='edit-profile'),
+    
 
 
 

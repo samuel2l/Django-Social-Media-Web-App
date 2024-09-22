@@ -1,9 +1,9 @@
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
-from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView,View
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 
-from .models import Post,Comment
+from .models import *
 
 # Create your views here.
 class HomeView(ListView):
@@ -88,3 +88,32 @@ class CreateCommentView(LoginRequiredMixin, CreateView):
         # Add the post to the context so we can view post while commenting
         context['post'] = Post.objects.get(id=post_id)  
         return context
+    
+
+class ProfileView(View):
+    def get(self, request, pk, *args, **kwargs):
+        profile = Profile.objects.get(pk=pk)
+        user = profile.user
+        posts = Post.objects.filter(author=user).order_by('-date_created')
+
+        context = {
+            'user': user,
+            'profile': profile,
+            'posts': posts
+        }
+
+        return render(request, 'profile.html', context)
+
+class EditProfileView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Profile
+    fields = ['name', 'bio','location', 'dp']
+    template_name = 'edit_profile.html'
+    success_url='profile/<int:pk>'
+
+    def get_success_url(self):
+            pk = self.kwargs['pk']
+            return reverse_lazy('profile', kwargs={'pk': pk})
+
+    def test_func(self):
+        profile = self.get_object()
+        return self.request.user == profile.user
