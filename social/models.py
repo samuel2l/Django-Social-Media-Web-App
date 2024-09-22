@@ -1,6 +1,10 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
+from django.dispatch import receiver
+
 # Create your models here.
 
 
@@ -18,6 +22,18 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Profile"
 
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+#     sender: The model class that sends the signal (User in this case).
+# instance: The actual instance of the model that's sending the signal.
+# created: A boolean indicating whether a new instance was created.
+# **kwargs: Additional keyword arguments.
+    if created:  
+        Profile.objects.create(user=instance)
+@receiver(post_save, sender=User)
+def save_profile(sender, instance, **kwargs):
+    instance.profile.save()
+
 class Post(models.Model):
     content=models.TextField()
     date_created=models.DateTimeField(default=timezone.now)
@@ -30,6 +46,7 @@ class Comment(models.Model):
     post=models.ForeignKey(Post,on_delete=models.CASCADE)
 
     
+
 
 
 
