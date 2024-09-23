@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView,View
@@ -60,8 +61,11 @@ def post_details(request,pk):
 
 
 def get_user_posts(request):
-    user_posts = Post.objects.filter(author=request.user)
-    return render(request,'posts.html',{'posts':user_posts})
+    posts = Post.objects.filter(author=request.user)
+    if posts:
+        return render(request,'posts.html',{'posts':posts})
+    else:
+        return  HttpResponse("You have no posts yet")
 
 class CreateCommentView(LoginRequiredMixin, CreateView):
     model = Comment
