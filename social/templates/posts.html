@@ -5,11 +5,13 @@
 <div class="container">
 
     {% for post in posts %}
-    <div class="row justify-content-center mt-3">
-        <div class="col-md-5 col-sm-12 border-bottom">
-            <p><strong>{{ post.author }}</strong> {{ post.date_created }}</p>
-            <p>{{ post.content }}</p>
-            <a class="stretched-link" href="{% url 'post-details' post.pk %}"></a>
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 col-sm-12 border-bottom">
+            <p><a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a> {{ post.date_created }}</p>
+            <div class="position-relative">
+                <p>{{ post.content }}</p>
+                <a href="{% url 'post-details' post.pk %}" class="stretched-link"></a>
+            </div>
         </div>
     </div>
     {% endfor %}
