@@ -18,6 +18,7 @@ class Profile(models.Model):
     bio=models.TextField(max_length=250)
     location=models.CharField(max_length=100)
     name=models.CharField(max_length=100)
+    followers=models.ManyToManyField(User,blank=True,related_name='followers')
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
