@@ -1,0 +1,38 @@
+{% extends 'basee.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-5 col-sm-6">
+            <a href="{% url 'posts' %}" class="btn btn-light">Back To Feed</a>
+        </div>
+    </div>
+    
+    {% for result in search_result %}
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-5 col-sm-12 border-bottom position-relative d-flex align-items-center py-3">
+            <img src="{{ result.dp.url }}" class="rounded-circle mr-3" width="80" height="80" alt="Profile Picture" />
+            
+            <div class="ml-3">
+                <p class="mb-1">
+                    <a href="{% url 'profile' result.pk %}" class="text-primary font-weight-bold" style="text-decoration: none;">
+                        @{{ result.user.username }}
+                    </a>
+                </p>
+
+                {% if result.location %}
+                    <p class="mb-1 text-muted">
+                        <i class="fas fa-map-marker-alt"></i> {{ result.location }}
+                    </p>
+                {% endif %}
+
+                <p class="mb-0 text-muted">
+                    <i class="fas fa-users"></i> Followers: {{ result.followers.count }}
+                </p>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+</div>
+{% endblock content %}

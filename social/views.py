@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView,View
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
-
+from django.db.models import Q
 from .models import *
 
 # Create your views here.
@@ -161,3 +161,33 @@ class Like(LoginRequiredMixin,View):
 
         next=request.POST.get('next','/')
         return HttpResponseRedirect(next)
+class SearchUser(View):
+    def get(self, request, *args, **kwargs):
+        query = self.request.GET.get('query')
+        search_result = Profile.objects.filter(
+            # The Q object is used to build complex query filters in Django, allowing for more dynamic or conditional filtering
+            # The double underscores (__) in Django field lookups allow you to filter based on fields in related models
+
+            Q(user__username__icontains=query)
+        )
+
+        context = {
+            'search_result': search_result,
+        }
+
+        return render(request, 'search.html', context)
+    
+# class SearchPost(View):
+#     def get(self, request, *args, **kwargs):
+#         query = self.request.GET.get('query')
+#         search_result = Post.objects.filter(
+#             # # The Q object is used to build complex query filters in Django, allowing for more dynamic or conditional filtering
+#             # The double underscores (__) in Django field lookups allow you to filter based on fields in related models
+#             Q(content__icontains=query)
+#         )
+
+#         context = {
+#             'search_result': search_result,
+#         }
+
+#         return render(request, 'search.html', context)
