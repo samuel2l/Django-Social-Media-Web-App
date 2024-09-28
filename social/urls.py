@@ -16,6 +16,7 @@ urlpatterns = [
     path('profile/<int:pk>/follow',views.Follow.as_view(),name='follow'),
     path('profile/<int:pk>/unfollow',views.Unfollow.as_view(),name='unfollow'),
    
+    path('post/<int:pk>/like',views.Like.as_view(),name='like'),
     
 
 

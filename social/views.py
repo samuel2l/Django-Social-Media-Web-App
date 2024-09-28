@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView,View
@@ -100,6 +100,7 @@ class ProfileView(View):
         user = profile.user
         posts = Post.objects.filter(author=user).order_by('-date_created')
         followers=profile.followers.all()
+
         
         if request.user in followers:
             is_follower=True
@@ -148,6 +149,15 @@ class Unfollow(LoginRequiredMixin,View):
 class Like(LoginRequiredMixin,View):
     def post(self,request,pk,*args,**kwargs):
         post=Post.objects.get(pk=pk)
-        post.likes.add(request.user)
+        print('requester',request.user)
+        print('likes',post.likes)
+        likes=post.likes.all()
+
         
-        return redirect('posts', pk=post.pk)
+        if request.user in likes:
+            post.likes.remove(request.user)
+        else:
+            post.likes.add(request.user)
+
+        next=request.POST.get('next','/')
+        return HttpResponseRedirect(next)

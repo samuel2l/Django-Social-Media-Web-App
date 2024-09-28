@@ -14,7 +14,19 @@
         <div class="col-md-6 col-sm-12 border-bottom">
             <p><strong>{{ post.author }}</strong> {{ post.date_created }}</p>
             <p>{{ post.content }}</p>
+            <div class="d-flex flex-row">
+                <form method="POST" action="{% url 'like' post.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
+                        <i class="fa-heart {% if user in post.likes.all %}fas text-danger{% else %}far{% endif %}">
+                            <span>{{ post.likes.all.count }}</span>
+                        </i>
+                    </button>
+                </form>
+</div>
         </div>
+        
     </div>
 
     <div class="row justify-content-center mt-3">
