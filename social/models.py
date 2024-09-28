@@ -39,6 +39,7 @@ class Post(models.Model):
     content=models.TextField()
     date_created=models.DateTimeField(default=timezone.now)
     author=models.ForeignKey(User,on_delete=models.CASCADE)
+    likes=models.ManyToManyField(User,related_name='likes',blank=True)
     
 class Comment(models.Model):
     content=models.TextField()

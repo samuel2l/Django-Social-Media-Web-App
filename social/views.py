@@ -145,3 +145,9 @@ class Unfollow(LoginRequiredMixin,View):
 
         return redirect('profile', pk=profile.pk)
     
+class Like(LoginRequiredMixin,View):
+    def post(self,request,pk,*args,**kwargs):
+        post=Post.objects.get(pk=pk)
+        post.likes.add(request.user)
+        
+        return redirect('posts', pk=post.pk)
