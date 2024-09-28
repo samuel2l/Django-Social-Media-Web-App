@@ -18,8 +18,8 @@ urlpatterns = [
    
     path('post/<int:pk>/like/',views.Like.as_view(),name='like'),
 
-    path('search/',views.SearchUser.as_view(),name='search_results'),
-
+    path('search/',views.Search.as_view(),name='search_results'),
+    # path('search/',views.SearchPost.as_view(),name='search_results'),
     
 
 

@@ -161,21 +161,21 @@ class Like(LoginRequiredMixin,View):
 
         next=request.POST.get('next','/')
         return HttpResponseRedirect(next)
-class SearchUser(View):
-    def get(self, request, *args, **kwargs):
-        query = self.request.GET.get('query')
-        search_result = Profile.objects.filter(
-            # The Q object is used to build complex query filters in Django, allowing for more dynamic or conditional filtering
-            # The double underscores (__) in Django field lookups allow you to filter based on fields in related models
+# class SearchUser(View):
+#     def get(self, request, *args, **kwargs):
+#         query = self.request.GET.get('query')
+#         search_result = Profile.objects.filter(
+#             # The Q object is used to build complex query filters in Django, allowing for more dynamic or conditional filtering
+#             # The double underscores (__) in Django field lookups allow you to filter based on fields in related models
 
-            Q(user__username__icontains=query)
-        )
+#             Q(user__username__icontains=query)
+#         )
 
-        context = {
-            'search_result': search_result,
-        }
+#         context = {
+#             'search_result': search_result,
+#         }
 
-        return render(request, 'search.html', context)
+#         return render(request, 'search.html', context)
     
 # class SearchPost(View):
 #     def get(self, request, *args, **kwargs):
@@ -190,4 +190,25 @@ class SearchUser(View):
 #             'search_result': search_result,
 #         }
 
-#         return render(request, 'search.html', context)
+#         return render(request, 'search_post.html', context)
+
+class Search(View):
+    def get(self, request, *args, **kwargs):
+        query = self.request.GET.get('query')
+        search_type = self.request.GET.get('search_type')
+
+        if search_type == 'users':
+            search_result = Profile.objects.filter(Q(user__username__icontains=query))
+            template = 'search.html'  # Or any template that displays users
+        elif search_type == 'posts':
+            search_result = Post.objects.filter(Q(content__icontains=query))
+            template = 'search_post.html'  # Or any template that displays posts
+        else:
+            search_result = []  # Empty result if no valid search type
+            template='search.html'
+
+        context = {
+            'search_result': search_result,
+        }
+
+        return render(request, template, context)

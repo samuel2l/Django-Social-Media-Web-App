@@ -1,0 +1,36 @@
+{% extends 'basee.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-5 col-sm-6">
+            <a href="{% url 'posts' %}" class="btn btn-light">Back To Feed</a>
+        </div>
+    </div>
+    
+    {% for result in search_result %}
+    
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 col-sm-12 border-bottom">
+            <p><a style="text-decoration: none" class="text-primary" href="{% url 'profile' result.author.profile.pk %}">@{{ result.author }}</a> {{ result.date_created }}</p>
+            <div class="position-relative">
+                <p>{{ result.content }}</p>
+                <a href="{% url 'post-details' result.pk %}" class="stretched-link"></a>
+            </div>
+            <div class="d-flex flex-row">
+                <form method="POST" action="{% url 'like' result.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
+                        <i class="far fa-heart"> <span>{{ result.likes.all.count }}</span></i>
+                    </button>
+                </form>
+</div>
+        </div>
+    </div>
+
+    
+{% endfor %}
+
+</div>
+{% endblock content %}

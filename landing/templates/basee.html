@@ -31,15 +31,18 @@
               <a class="nav-link" href="{% url 'my-posts'   %}">My Posts</a>
             </li>
           </ul>
-          <form class="d-flex" method="GET" action="{%url 'search_results' %}">
-            <div class="input-group">
-              <span class="input-group-text" id="basic-addon1">@</span>
-              <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" name="query" value="{{request.GET.query}}">
-              <button style="border: none; background-color: transparent; box-shadow: none" type="submit"><i class="fas fa-search"></i></button>
-
-            </div>
-          </form>
-          {% if user.is_authenticated %}
+          <form class="d-flex align-items-center" method="GET" action="{% url 'search_results' %}">
+            <input type="text" name="query" class="form-control" placeholder="Search..." required style="width: 50%;">
+            
+            <select name="search_type" class="form-select mx-2" style="width: 100px;">
+                <option value="users">Users</option>
+                <option value="posts">Posts</option>
+            </select>
+            
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        
+                  {% if user.is_authenticated %}
           <div class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown" role="button" aria-expanded="false"><i class="fas fa-user"></i></a>
             <ul class="dropdown-menu">
