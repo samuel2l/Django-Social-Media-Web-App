@@ -13,6 +13,9 @@ urlpatterns = [
     path('my-posts/',views.get_user_posts,name='my-posts'),
     path('profile/<int:pk>',views.ProfileView.as_view(),name='profile'),
     path('edit-profile/<int:pk>',views.EditProfileView.as_view(),name='edit-profile'),
+    path('profile/<int:pk>/follow',views.Follow.as_view(),name='follow'),
+    path('profile/<int:pk>/unfollow',views.Unfollow.as_view(),name='unfollow'),
+   
     
 
 

@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView,View
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
@@ -99,11 +99,20 @@ class ProfileView(View):
         profile = Profile.objects.get(pk=pk)
         user = profile.user
         posts = Post.objects.filter(author=user).order_by('-date_created')
+        followers=profile.followers.all()
+        
+        if request.user in followers:
+            is_follower=True
+        else:
+            is_follower=False
+
 
         context = {
             'user': user,
             'profile': profile,
-            'posts': posts
+            'posts': posts,
+            'followers':len(followers),
+            'is_follower':is_follower
         }
 
         return render(request, 'profile.html', context)
@@ -121,3 +130,18 @@ class EditProfileView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         profile = self.get_object()
         return self.request.user == profile.user
+    
+class Follow(LoginRequiredMixin,View):
+    def post(self,request,pk,*args,**kwargs):
+        profile=Profile.objects.get(pk=pk)
+        
+        profile.followers.add(request.user)
+        return redirect('profile', pk=profile.pk)
+    
+class Unfollow(LoginRequiredMixin,View):
+    def post(self,request,pk,*args,**kwargs):
+        profile=Profile.objects.get(pk=pk)
+        profile.followers.remove(request.user)
+
+        return redirect('profile', pk=profile.pk)
+    

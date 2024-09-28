@@ -37,6 +37,23 @@
             {% if profile.bio %}
             <p>{{ profile.bio }}</p>
             {% endif %}
+            <div class="mb-3">
+                <p>Followers: {{ followers }}</p>
+                {% if user == request.user %}
+                {% else %}
+                {% if is_follower %}
+                <form method="POST" action="{% url 'unfollow' profile.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-danger" type="submit">Unfollow</button>
+                </form>
+                {% else %}
+                <form method="POST" action="{% url 'follow' profile.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-success" type="submit">Follow</button>
+                </form>
+                {% endif %}
+                {% endif %}
+            </div>
         </div>
     </div>
     {% if profile.name %}
