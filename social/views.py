@@ -161,36 +161,6 @@ class Like(LoginRequiredMixin,View):
 
         next=request.POST.get('next','/')
         return HttpResponseRedirect(next)
-# class SearchUser(View):
-#     def get(self, request, *args, **kwargs):
-#         query = self.request.GET.get('query')
-#         search_result = Profile.objects.filter(
-#             # The Q object is used to build complex query filters in Django, allowing for more dynamic or conditional filtering
-#             # The double underscores (__) in Django field lookups allow you to filter based on fields in related models
-
-#             Q(user__username__icontains=query)
-#         )
-
-#         context = {
-#             'search_result': search_result,
-#         }
-
-#         return render(request, 'search.html', context)
-    
-# class SearchPost(View):
-#     def get(self, request, *args, **kwargs):
-#         query = self.request.GET.get('query')
-#         search_result = Post.objects.filter(
-#             # # The Q object is used to build complex query filters in Django, allowing for more dynamic or conditional filtering
-#             # The double underscores (__) in Django field lookups allow you to filter based on fields in related models
-#             Q(content__icontains=query)
-#         )
-
-#         context = {
-#             'search_result': search_result,
-#         }
-
-#         return render(request, 'search_post.html', context)
 
 class Search(View):
     def get(self, request, *args, **kwargs):
@@ -212,3 +182,17 @@ class Search(View):
         }
 
         return render(request, template, context)
+    
+class Followers(View):
+    def get(self, request,pk, *args, **kwargs):
+
+        profile = Profile.objects.get(pk=pk)  # Get a specific profile instance
+        followers = profile.followers.all()
+
+        context = {
+            'followers': followers,
+            'profile':profile
+        }
+
+        return render(request, 'followers.html', context)
+    
