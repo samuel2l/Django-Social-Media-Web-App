@@ -46,6 +46,18 @@
                         <small class="text-muted">{{ comment.date_created|date:"F d, Y" }} at {{ comment.date_created|time:"H:i" }}</small>
                     </p>
                     <p>{{ comment.content }}</p>
+                    <div class="d-flex flex-row">
+                        <form method="POST" action="{% url 'like-comment' post.pk comment.pk %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
+                                <i class="fa-heart {% if user in comment.likes.all %}fas text-danger{% else %}far{% endif %}">
+                                    <span>{{ comment.likes.all.count }}</span>
+                                </i>
+                            </button>
+                        </form>
+
+        </div>
                 </div>
             </div>
         </div>
