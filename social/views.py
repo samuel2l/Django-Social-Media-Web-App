@@ -149,8 +149,6 @@ class Unfollow(LoginRequiredMixin,View):
 class Like(LoginRequiredMixin,View):
     def post(self,request,pk,*args,**kwargs):
         post=Post.objects.get(pk=pk)
-        print('requester',request.user)
-        print('likes',post.likes)
         likes=post.likes.all()
 
         
@@ -161,6 +159,21 @@ class Like(LoginRequiredMixin,View):
 
         next=request.POST.get('next','/')
         return HttpResponseRedirect(next)
+
+class LikeComment(LoginRequiredMixin,View):
+    def post(self,request,comment_pk,*args,**kwargs):
+        comment=Comment.objects.get(pk=comment_pk)
+        likes=comment.likes.all()
+        
+        if request.user in likes:
+            comment.likes.remove(request.user)
+        else:
+            comment.likes.add(request.user)
+
+        next=request.POST.get('next','/')
+        return HttpResponseRedirect(next)
+
+
 
 class Search(View):
     def get(self, request, *args, **kwargs):

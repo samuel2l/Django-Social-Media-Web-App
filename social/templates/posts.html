@@ -20,6 +20,7 @@
                         <i class="far fa-heart"> <span>{{ post.likes.all.count }}</span></i>
                     </button>
                 </form>
+                <a href="{% url 'comment' post.pk %}" class="btn btn-outline-primary ml-3">Comment</a>
 </div>
         </div>
     </div>
