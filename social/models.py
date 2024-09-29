@@ -47,6 +47,18 @@ class Comment(models.Model):
     author=models.ForeignKey(User,on_delete=models.CASCADE)
     post=models.ForeignKey(Post,on_delete=models.CASCADE)
     likes=models.ManyToManyField(User,related_name='comment_likes',blank=True)
+    parent=models.ForeignKey('self',null=True,blank=True,on_delete=models.CASCADE,related_name='+')
+
+    @property
+    def children(self):
+        return Comment.objects.filter(parent=self).order_by('-date_created').all()
+    
+    @property
+    def is_parent(self):
+        if self.parent:
+            return False
+        return True
+
 
 
     
