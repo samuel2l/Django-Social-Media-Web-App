@@ -1,0 +1,44 @@
+{% extends 'basee.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    
+    <!-- Display the original post -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Original Post by {{ post.author }}</h5>
+        </div>
+        <div class="card-body">
+            <p>{{ post.content }}</p>
+            <small class="text-muted">Posted on: {{ post.date_created }}</small>
+        </div>
+    </div>
+    
+    <!-- Display the parent comment -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Parent Comment by {{ parent_comment.author }}</h5>
+        </div>
+        <div class="card-body">
+            <p>{{ parent_comment.content }}</p>
+            <small class="text-muted">Commented on: {{ parent_comment.date_created }}</small>
+        </div>
+    </div>
+
+    <!-- Form to reply to the parent comment -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Reply to Comment</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-primary">Reply</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

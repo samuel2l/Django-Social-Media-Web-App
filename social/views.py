@@ -93,6 +93,37 @@ class CreateCommentView(LoginRequiredMixin, CreateView):
         context['post'] = Post.objects.get(id=post_id)  
         return context
     
+class CreateCommentReplyView(LoginRequiredMixin, CreateView):
+    model = Comment
+    fields = ['content']
+    template_name = 'create_comment_reply.html'
+    
+    def form_valid(self, form):
+        post_id = self.kwargs.get('pk')  
+        post = Post.objects.get(id=post_id)  
+
+        comment_id = self.kwargs.get('comment_pk')  
+        parent_comment = Comment.objects.get(id=comment_id)  
+
+        form.instance.author = self.request.user
+        form.instance.post =post
+        form.instance.parent=parent_comment
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        # Redirect back to the specific post after commenting
+        return reverse('post-details', kwargs={'pk': self.kwargs.get('pk')})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post_id = self.kwargs.get('pk')
+        comment_id = self.kwargs.get('comment_pk')
+
+        context['post'] = Post.objects.get(id=post_id)  
+        context['parent_comment'] = Comment.objects.get(id=comment_id)  
+
+        return context
+
 
 class ProfileView(View):
     def get(self, request, pk, *args, **kwargs):

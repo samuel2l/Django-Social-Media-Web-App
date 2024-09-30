@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <!-- Post content -->
+
     <div class="row justify-content-center mt-3">
         <div class="col-md-6 col-sm-12 border-bottom">
             <p><strong>{{ post.author }}</strong> {{ post.date_created }}</p>
@@ -25,9 +25,8 @@
                     </button>
                 </form>
                 <a href="{% url 'comment' post.pk %}" class="btn btn-outline-primary ml-3">Comment</a>
-</div>
+            </div>
         </div>
-        
     </div>
 
     <div class="row justify-content-center mt-3">
@@ -38,6 +37,10 @@
 
 
     {% for comment in comments %}
+    <!-- only show if it is a parent comment
+    achieve this check using the is_parent property method on the comment model 
+    -->
+     {%if comment.is_parent%}
     <div class="row justify-content-center mt-2">
         <div class="col-md-5 col-sm-12 offset-md-1">
             <div class="media mb-3">
@@ -56,21 +59,41 @@
                                 </i>
                             </button>
                         </form>
-                        <div>
-                            <button class="remove-default-btn"><i class="far fa-comment-dots" onclick="commentReplyToggle('{{ comment.pk }}')"></i></button>
-                        </div>
 
-        </div>
+                        <!-- Reply Button -->
+                        <a href="{% url 'reply-comment' post.pk comment.pk %}" class="btn btn-sm btn-outline-secondary ml-3">Reply</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    {% empty %}
+    {% elif empty %}
     <div class="row justify-content-center mt-3">
         <div class="col-md-5 col-sm-12 offset-md-1">
             <p class="text-muted">No comments yet. Be the first to comment!</p>
         </div>
     </div>
+    {% for child_comment in comment.children %}
+    <div class="row justify-content-center mt-3 mb-5 child-comment">
+        <div class="col-md-5 col-sm-12 border-bottom">
+            <p>
+                <div>
+                    <a href="{% url 'profile' child_comment.author.profile.pk %}">
+                        <img class="round-circle post-img" height="30" width="30" src="{{ child_comment.author.profile.dp.url }}" />
+                    </a>
+                    <p class="post-text">
+                        <a class="text-primary post-link" href="{% url 'profile' child_comment.author.profile.pk %}">@{{ child_comment.author }}</a> {{ child_comment.created_on }}
+                    </p>
+                </div>
+                {% if request.user == child_comment.author %}
+                    <a href="{% url 'comment-delete' post.pk child_comment.pk %}" class="edit-color"><i class="fas fa-trash"></i></a>
+                {% endif %}
+            </p>
+            <p>{{ child_comment.comment }}</p>
+        </div>
+    </div>
+    {% endfor %}
+    {%endif%}
     {% endfor %}
 </div>
-{% endblock content %}
+{% endblock %}
