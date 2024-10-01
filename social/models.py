@@ -60,7 +60,15 @@ class Comment(models.Model):
         return True
 
 
-
+class Notification(models.Model):
+	# 1 = Like, 2 = Comment, 3 = Follow
+	notification_type = models.IntegerField()
+	receiver = models.ForeignKey(User, related_name='notified', on_delete=models.CASCADE, null=True)
+	sender = models.ForeignKey(User, related_name='notifier', on_delete=models.CASCADE, null=True)
+	post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='+', blank=True, null=True)
+	comment = models.ForeignKey('Comment', on_delete=models.CASCADE, related_name='+', blank=True, null=True)
+	date = models.DateTimeField(default=timezone.now)
+	seen = models.BooleanField(default=False)
     
 
 
