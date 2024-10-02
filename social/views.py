@@ -72,14 +72,14 @@ class CreateCommentView(LoginRequiredMixin, CreateView):
     fields = ['content']
     template_name = 'create_comment.html'
     def form_valid(self, form):
-        #use self.kwarges.get to access parameters passed
+        #use self.kwargs.get to access parameters passed
 
         post_id = self.kwargs.get('pk')  
         post = Post.objects.get(id=post_id)  
 
         form.instance.author = self.request.user
         form.instance.post = post
-        notification = Notification.objects.create(notification_type=3, sender=self.request.user, receiver=post.author)
+        notification = Notification.objects.create(notification_type=2, sender=self.request.user, receiver=post.author)
         return super().form_valid(form)
 
     def get_success_url(self):
