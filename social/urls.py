@@ -20,4 +20,6 @@ urlpatterns = [
     path('post/<int:pk>/like/',views.Like.as_view(),name='like'),
     path('search/',views.Search.as_view(),name='search_results'),
     path('profile/<int:pk>/followers/',views.Followers.as_view(),name='followers'),
-]
+ path('<int:notification_pk>/notification/post/<int:post_pk>', views.PostNotification.as_view(), name='post-notification'),
+    path('<int:notification_pk>/notification/profile/<int:profile_pk>', views.FollowNotification.as_view(), name='follow-notification'),
+    path('<int:notification_pk>/notification/delete', views.RemoveNotification.as_view(), name='delete-notification'),]
