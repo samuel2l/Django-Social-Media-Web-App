@@ -128,9 +128,6 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'my-posts' %}">My Posts</a>
             </li>
-            <div class="nav-item">
-              {% show_notifications %}
-            </div>
           </ul>
           <form class="d-flex align-items-center" method="GET" action="{% url 'search_results' %}">
             <input type="text" name="query" class="form-control" placeholder="Search..." required>
@@ -150,6 +147,9 @@
               <li><a class="dropdown-item" href="{% url 'profile' user.profile.pk %}">Profile</a></li>
               <li><a class="dropdown-item" href="{% url 'account_logout' %}">Sign Out</a></li>
             </ul>
+          </div>
+          <div class="nav-item">
+            {% show_notifications %}
           </div>
 
           {% endif %}

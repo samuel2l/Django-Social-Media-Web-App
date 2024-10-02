@@ -108,6 +108,9 @@ class CreateCommentReplyView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         form.instance.post =post
         form.instance.parent=parent_comment
+        comment=form.save()
+        notification = Notification.objects.create(notification_type=2, sender=self.request.user, receiver=parent_comment.author,comment=comment)
+
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -188,6 +191,7 @@ class Like(LoginRequiredMixin,View):
             post.likes.remove(request.user)
         else:
             post.likes.add(request.user)
+            notification = Notification.objects.create(notification_type=1, sender=request.user, receiver=post.author,post=post)
 
         next=request.POST.get('next','/')
         return HttpResponseRedirect(next)
@@ -201,6 +205,7 @@ class LikeComment(LoginRequiredMixin,View):
             comment.likes.remove(request.user)
         else:
             comment.likes.add(request.user)
+            notification = Notification.objects.create(notification_type=1, sender=request.user, receiver=comment.author,comment=comment)
 
         next=request.POST.get('next','/')
         return HttpResponseRedirect(next)
@@ -214,12 +219,12 @@ class Search(View):
 
         if search_type == 'users':
             search_result = Profile.objects.filter(Q(user__username__icontains=query))
-            template = 'search.html'  # Or any template that displays users
+            template = 'search.html' 
         elif search_type == 'posts':
             search_result = Post.objects.filter(Q(content__icontains=query))
             template = 'search_post.html'  # Or any template that displays posts
         else:
-            search_result = []  # Empty result if no valid search type
+            search_result = []
             template='search.html'
 
         context = {
@@ -231,7 +236,7 @@ class Search(View):
 class Followers(View):
     def get(self, request,pk, *args, **kwargs):
 
-        profile = Profile.objects.get(pk=pk)  # Get a specific profile instance
+        profile = Profile.objects.get(pk=pk)
         followers = profile.followers.all()
 
         context = {
@@ -259,6 +264,7 @@ class FollowNotification(View):
         notification.save()
 
         return redirect('profile', pk=profile_pk)
+    
 
 class RemoveNotification(View):
     def delete(self, request, notification_pk, *args, **kwargs):
