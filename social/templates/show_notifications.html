@@ -1,3 +1,16 @@
+<script>
+	function showNotifications() {
+	console.log('ah show notifs????????????????/')
+	const container = document.getElementById('notification-container');
+
+	if (container.classList.contains('d-none')) {
+		container.classList.remove('d-none');
+	} else {
+		container.classList.add('d-none');
+	}
+}
+
+</script>
 <div class="dropdown"></div>
 	<span class="badge bg-primary notification-badge" onclick="showNotifications()">{{ notifications.count }}</span>
 	<div class="dropdown-content d-none" id="notification-container">

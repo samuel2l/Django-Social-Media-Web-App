@@ -9,6 +9,7 @@ function commentReplyToggle(parent_id) {
 }
 
 function showNotifications() {
+	console.log('ah show notifs????????????????/')
 	const container = document.getElementById('notification-container');
 
 	if (container.classList.contains('d-none')) {

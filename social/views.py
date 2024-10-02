@@ -71,7 +71,6 @@ class CreateCommentView(LoginRequiredMixin, CreateView):
     model = Comment
     fields = ['content']
     template_name = 'create_comment.html'
-    
     def form_valid(self, form):
         #use self.kwarges.get to access parameters passed
 
@@ -80,6 +79,7 @@ class CreateCommentView(LoginRequiredMixin, CreateView):
 
         form.instance.author = self.request.user
         form.instance.post = post
+        notification = Notification.objects.create(notification_type=3, sender=self.request.user, receiver=post.author)
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -168,6 +168,7 @@ class Follow(LoginRequiredMixin,View):
         profile=Profile.objects.get(pk=pk)
         
         profile.followers.add(request.user)
+        notification = Notification.objects.create(notification_type=3, sender=request.user, receiver=profile.user)
         return redirect('profile', pk=profile.pk)
     
 class Unfollow(LoginRequiredMixin,View):
@@ -245,7 +246,7 @@ class PostNotification(View):
         notification = Notification.objects.get(pk=notification_pk)
         post = Post.objects.get(pk=post_pk)
 
-        notification.user_has_seen = True
+        notification.seen = True
         notification.save()
 
         return redirect('post-details', pk=post_pk)
@@ -253,9 +254,8 @@ class PostNotification(View):
 class FollowNotification(View):
     def get(self, request, notification_pk, profile_pk, *args, **kwargs):
         notification = Notification.objects.get(pk=notification_pk)
-        profile = Profile.objects.get(pk=profile_pk)
 
-        notification.user_has_seen = True
+        notification.seen = True
         notification.save()
 
         return redirect('profile', pk=profile_pk)
@@ -264,7 +264,7 @@ class RemoveNotification(View):
     def delete(self, request, notification_pk, *args, **kwargs):
         notification = Notification.objects.get(pk=notification_pk)
 
-        notification.user_has_seen = True
+        notification.seen = True
         notification.save()
 
         return HttpResponse('Success', content_type='text/plain')
