@@ -6,8 +6,6 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 
 # Create your models here.
-
-
 from django.contrib.auth.models import User
 
 class Profile(models.Model):
