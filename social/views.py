@@ -274,3 +274,7 @@ class RemoveNotification(View):
         notification.save()
 
         return HttpResponse('Success', content_type='text/plain')
+    
+
+class JK:
+    pass
