@@ -322,11 +322,14 @@ class CreateChat(CreateView):
         #     print(e)
         #     return redirect('create-chat')
 
+
 class ChatView(View):
     def get(self, request, pk, *args, **kwargs):
         form = MessageForm()
-        chat = Chat.objects.get(pk=pk)
-        message_list = Message.objects.filter(chat__pk__contains=pk)
+        chat = get_object_or_404(Chat, pk=pk)  
+        message_list = Message.objects.filter(chat=chat).order_by('date')
+        print('ddddd')
+        print(message_list)
         context = {
             'chat': chat,
             'form': form,
