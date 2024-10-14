@@ -38,6 +38,7 @@ class Post(models.Model):
     date_created=models.DateTimeField(default=timezone.now)
     author=models.ForeignKey(User,on_delete=models.CASCADE)
     likes=models.ManyToManyField(User,related_name='likes',blank=True)
+    img=models.ImageField(upload_to='postimages',blank=True,null=True)
     
 class Comment(models.Model):
     content=models.TextField()

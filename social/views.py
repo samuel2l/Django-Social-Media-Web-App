@@ -275,6 +275,3 @@ class RemoveNotification(View):
 
         return HttpResponse('Success', content_type='text/plain')
     
-
-class JK:
-    pass
