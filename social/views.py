@@ -335,7 +335,7 @@ class ChatView(View):
 
         return render(request, 'chat.html', context)
 
-class CreateMessage(View):
+class CreateMessageView(View):
     def post(self, request, pk, *args, **kwargs):
         chat = Chat.objects.get(pk=pk)
         if chat.receiver == request.user:
@@ -344,10 +344,10 @@ class CreateMessage(View):
             receiver = chat.receiver
 
         message = Message(
-            Chat=chat,
-            sender_user=request.user,
+            chat=chat,
+            sender=request.user,
             receiver=receiver,
-            body=request.POST.get('message')
+            content=request.POST.get('message')
         )
 
         message.save()
