@@ -12,6 +12,12 @@
         <div class="col-md-6 col-sm-12 border-bottom">
             <p><strong>{{ post.author }}</strong> {{ post.date_created }}</p>
             <p>{{ post.content }}</p>
+            {% if post.img %}
+            <div class="mt-2">
+                <img src="{{ post.img.url }}" class="img-fluid" alt="Post Image"> <!-- Display the image -->
+            </div>
+            {% endif %}
+
             <div class="d-flex flex-row">
                 <form method="POST" action="{% url 'like' post.pk %}">
                     {% csrf_token %}

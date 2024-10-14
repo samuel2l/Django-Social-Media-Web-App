@@ -10,18 +10,23 @@
             <p><a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a> {{ post.date_created }}</p>
             <div class="position-relative">
                 <p>{{ post.content }}</p>
+                {% if post.img %}  <!-- Check if the post has an image -->
+                <div class="mt-2">
+                    <img src="{{ post.img.url }}" class="img-fluid" alt="Post Image" style="max-width: 100%; height: auto; max-height: 400px; object-fit: cover;"> <!-- Display the image with max size -->
+                </div>
+                {% endif %}
                 <a href="{% url 'post-details' post.pk %}" class="stretched-link"></a>
             </div>
-            <div class="d-flex flex-row">
+            <div class="d-flex flex-row mt-3">
                 <form method="POST" action="{% url 'like' post.pk %}">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ request.path }}">
                     <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
-                        <i class="fa-heart {% if user in comment.likes.all %}fas text-danger{% else %}far{% endif %}"> <span>{{ post.likes.all.count }}</span></i>
+                        <i class="fa-heart {% if user in post.likes.all %}fas text-danger{% else %}far{% endif %}"> <span>{{ post.likes.all.count }}</span></i>
                     </button>
                 </form>
                 <a href="{% url 'comment' post.pk %}" class="btn btn-outline-primary ml-3">Comment</a>
-</div>
+            </div>
         </div>
     </div>
     {% endfor %}

@@ -16,7 +16,7 @@ class HomeView(ListView):
 
 class CreatePostView(LoginRequiredMixin,CreateView):
     model=Post
-    fields=['content']
+    fields=['content','img']
     template_name='create_post.html'
     
     success_url='/posts'
