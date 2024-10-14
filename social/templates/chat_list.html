@@ -1,0 +1,26 @@
+{% extends "basee.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Your Chats</h2>
+    
+    {% if chat_list %}
+        <ul class="list-group">
+            {% for chat in chat_list %}
+                <li class="list-group-item">
+                    <a href="{% url 'chat' chat.pk %}">
+                        Chat with 
+                        {% if chat.receiver == request.user %}
+                            {{ chat.receiver.username }}
+                        {% else %}
+                            {{ chat.receiver.username }}
+                        {% endif %}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no chats yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

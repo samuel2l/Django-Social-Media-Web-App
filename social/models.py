@@ -70,7 +70,19 @@ class Notification(models.Model):
 	seen = models.BooleanField(default=False)
     
 
+# represents a conversationbetween any two users
+class Chat(models.Model):
+	sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+	receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
 
+class Message(models.Model):
+	chat = models.ForeignKey(Chat, related_name='+', on_delete=models.CASCADE, blank=True, null=True)
+	sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+	receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+	content = models.CharField(max_length=1000)
+	img = models.ImageField(upload_to='messageimgs', blank=True, null=True)
+	date = models.DateTimeField(default=timezone.now)
+	is_seen = models.BooleanField(default=False)
 
 
 

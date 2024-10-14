@@ -4,6 +4,9 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView,View
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from django.db.models import Q
+
+from .forms import ChatForm, MessageForm
+
 from .models import *
 
 # Create your views here.
@@ -222,7 +225,7 @@ class Search(View):
             template = 'search.html' 
         elif search_type == 'posts':
             search_result = Post.objects.filter(Q(content__icontains=query))
-            template = 'search_post.html'  # Or any template that displays posts
+            template = 'search_post.html'
         else:
             search_result = []
             template='search.html'
@@ -275,3 +278,77 @@ class RemoveNotification(View):
 
         return HttpResponse('Success', content_type='text/plain')
     
+class ListChats(ListView):
+    model=Chat
+    template_name='chat_list.html'
+    context_object_name='chat_list'
+
+    def get_queryset(self):
+        return Chat.objects.filter(Q(sender=self.request.user) | Q(receiver=self.request.user))
+
+class CreateChat(CreateView):
+    def get(self, request, *args, **kwargs):
+        form = ChatForm()
+
+        context = {
+            'form': form
+        }
+
+        return render(request, 'create_chat.html', context)
+
+    def post(self, request, *args, **kwargs):
+        form = ChatForm(request.POST)
+
+        username = request.POST.get('username')
+
+        # try:
+        receiver = User.objects.get(username=username)
+        if Chat.objects.filter(sender=request.user, receiver=receiver).exists():
+            chat = Chat.objects.filter(user=request.user, receiver=receiver)[0]
+            return redirect('chat', pk=chat.pk)
+        elif Chat.objects.filter(sender=receiver, receiver=request.user).exists():
+            chat = Chat.objects.filter(sender=receiver, receiver=request.user)[0]
+            return redirect('chat', pk=chat.pk)
+
+        if form.is_valid():
+            chat = Chat(
+                sender=request.user,
+                receiver=receiver
+            )
+            chat.save()
+
+            return redirect('chat', pk=chat.pk)
+        # except Exception as e:
+        #     print(e)
+        #     return redirect('create-chat')
+
+class ChatView(View):
+    def get(self, request, pk, *args, **kwargs):
+        form = MessageForm()
+        chat = Chat.objects.get(pk=pk)
+        message_list = Message.objects.filter(chat__pk__contains=pk)
+        context = {
+            'chat': chat,
+            'form': form,
+            'message_list': message_list
+        }
+
+        return render(request, 'chat.html', context)
+
+class CreateMessage(View):
+    def post(self, request, pk, *args, **kwargs):
+        chat = Chat.objects.get(pk=pk)
+        if chat.receiver == request.user:
+            receiver = chat.sender
+        else:
+            receiver = chat.receiver
+
+        message = Message(
+            Chat=chat,
+            sender_user=request.user,
+            receiver=receiver,
+            body=request.POST.get('message')
+        )
+
+        message.save()
+        return redirect('chat', pk=pk)

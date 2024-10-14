@@ -1,0 +1,17 @@
+{% extends "basee.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Start a New Chat</h2>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" class="form-control" placeholder="Enter the username to chat with" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Start Chat</button>
+    </form>
+</div>
+{% endblock %}

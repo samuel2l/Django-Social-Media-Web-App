@@ -22,4 +22,10 @@ urlpatterns = [
     path('profile/<int:pk>/followers/',views.Followers.as_view(),name='followers'),
  path('<int:notification_pk>/notification/post/<int:post_pk>', views.PostNotification.as_view(), name='post-notification'),
     path('<int:notification_pk>/notification/profile/<int:profile_pk>', views.FollowNotification.as_view(), name='follow-notification'),
-    path('<int:notification_pk>/notification/delete', views.RemoveNotification.as_view(), name='delete-notification'),]
+    path('<int:notification_pk>/notification/delete', views.RemoveNotification.as_view(), name='delete-notification'),
+    path('chats/',views.ListChats.as_view(),name='chat-list'),
+    path('chats/create-chat',views.CreateChat.as_view(),name='create-chat'),
+path('chats/<int:pk>',views.ChatView.as_view(),name='chat'),
+path('chats/<int:pk>/create-message',views.ChatView.as_view(),name='create-message')    
+
+    ]
